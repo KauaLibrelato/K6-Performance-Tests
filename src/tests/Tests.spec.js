@@ -4,7 +4,7 @@ import { Rate, Trend } from 'k6/metrics';
 import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js';
 import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js';
 
-export const getPersonsDuration = new Trend('get_persons_duration', true);
+export const getUserDuration = new Trend('get_persons_duration', true);
 export const rateStatusCodeOk = new Rate('rate_status_code_ok');
 
 export let options = {
@@ -30,6 +30,8 @@ export function handleSummary(data) {
 
 export default function () {
   const res = http.get('https://reqres.in/api/users?page=2');
+
+  getUserDuration.add(res.timings.duration);
 
   rateStatusCodeOk.add(res.status === 200);
 
